@@ -19,9 +19,7 @@ english-learning-platform/
 │   └── ui/                         # Shadcn-based shared components (optional)
 ├── docs/
 │   ├── architecture.md
-│   ├── api-contracts.md
 │   ├── database.md
-│   └── tasks.md
 ├── docker-compose.yml
 ├── docker-compose.prod.yml
 ├── .env.example
@@ -127,6 +125,10 @@ english-learning-platform/
 - Import in api: `import { CreateVideoDto } from '@english-platform/shared'`
 - Import in web: `import { CreateVideoSchema } from '@english-platform/shared'`
 
+### Design System
+All UI work must follow `design.md` at the project root.
+Before generating or editing any component in `apps/web`, read design.md and apply its tokens.
+
 ### Git
 - Branch: `feature/<ticket>-<slug>`, `fix/<ticket>-<slug>`, `chore/<slug>`
 - Commit: Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`)
@@ -192,7 +194,6 @@ docker-compose up -d
 
 ## Current Focus
 
-See `docs/tasks.md` for active sprint tasks.
 See `docs/database.md for database structure`
 **Phase 1 (current):** Project scaffolding, Auth module, Admin CRUD.
 **Phase 2:** Interactive Shadowing flow + Azure Speech integration.
