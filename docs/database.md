@@ -142,20 +142,6 @@ Individual subtitle sentences within a video. Each row is one sentence to shadow
 
 ## Speaking Content
 
-### `scenario_categories`
-
-Groups AI conversation scenarios into categories (e.g., "At the airport", "Job interview").
-
-| Column | Type | Notes |
-|---|---|---|
-| `id` | uuid PK | |
-| `slug` | varchar(100) | Unique |
-| `name` | varchar(100) | |
-| `display_order` | integer | Default 0 |
-| `created_at` | timestamptz | Auto |
-
----
-
 ### `scenarios`
 
 Defines AI roleplay scenarios. The `system_prompt` is injected directly into the LLM.
@@ -163,7 +149,6 @@ Defines AI roleplay scenarios. The `system_prompt` is injected directly into the
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid PK | |
-| `category_id` | uuid FK → `scenario_categories.id` | |
 | `title` | varchar(255) | |
 | `description` | text | Nullable |
 | `system_prompt` | text | Full prompt sent as system message to Azure OpenAI |
@@ -172,8 +157,6 @@ Defines AI roleplay scenarios. The `system_prompt` is injected directly into the
 | `level` | `difficulty_level_enum` | Nullable |
 | `is_active` | boolean | Default `true` |
 | `created_at` / `updated_at` | timestamptz | Auto |
-
-**Indexes:** `category_id`, `(category_id, level, is_active)` — composite for filtered browsing.
 
 ---
 
@@ -233,13 +216,12 @@ One session = one complete conversation with an AI scenario.
 |---|---|---|
 | `id` | uuid PK | |
 | `user_id` | uuid FK → `users.id` | Cascade delete |
-| `scenario_id` | uuid FK → `scenarios.id` | |
 | `session_summary` | text | AI-generated summary; written at session end |
 | `overall_score` | decimal(5,2) | Aggregated pronunciation score; nullable until session ends |
 | `started_at` | timestamptz | Auto |
 | `ended_at` | timestamptz | NULL = session in progress |
 
-**Indexes:** `user_id`, `scenario_id`, `(user_id, scenario_id)`
+**Indexes:** `user_id`
 
 > **Agent note:** `ended_at IS NULL` means the session is still active.
 
@@ -360,7 +342,6 @@ shadowing_attempts.subtitle_id   → subtitles.id
 shadowing_progress.user_id       → users.id              [CASCADE DELETE]
 shadowing_progress.video_id      → videos.id
 speaking_sessions.user_id        → users.id              [CASCADE DELETE]
-speaking_sessions.scenario_id    → scenarios.id
 speaking_turns.session_id        → speaking_sessions.id  [CASCADE DELETE]
 word_set_words.word_set_id       → word_sets.id          [CASCADE DELETE]
 user_word_progress.user_id       → users.id              [CASCADE DELETE]
